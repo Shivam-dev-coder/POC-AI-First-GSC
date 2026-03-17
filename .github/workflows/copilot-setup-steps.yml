@@ -4,14 +4,38 @@ on:
   workflow_dispatch:
   push:
     paths:
+      - gsc-ai-backend/**
       - .github/workflows/copilot-setup-steps.yml
   pull_request:
     paths:
+      - gsc-ai-backend/**
       - .github/workflows/copilot-setup-steps.yml
 
 jobs:
-  copilot-setup-steps:
+  backend-tests:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install Python dependencies
+      working-directory: gsc-ai-backend
+      run: pip install -r requirements.txt
+
+    - name: Run backend unit tests
+      working-directory: gsc-ai-backend
+      run: python -m pytest -q tests
+
+  dashboard-build:
+    runs-on: ubuntu-latest
+    needs: backend-tests
 
     permissions:
       contents: read
@@ -23,14 +47,10 @@ jobs:
       with:
         node-version: lts/*
 
-    - name: Install dependencies
+    - name: Install dashboard dependencies
       working-directory: gsc-ai-backend/dashboard
       run: npm ci
 
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-
-    # Customize this step as needed
-    - name: Build application
+    - name: Build dashboard
       working-directory: gsc-ai-backend/dashboard
       run: npm run build
