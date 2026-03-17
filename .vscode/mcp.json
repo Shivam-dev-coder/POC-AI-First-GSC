@@ -1,0 +1,21 @@
+{
+  "servers": {
+    "gsc-delivery": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        "-m",
+        "mcp_server.server"
+      ],
+      "cwd": "${workspaceFolder}/gsc-ai-backend"
+    },
+    "playwright-test": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "playwright",
+        "run-test-mcp-server"
+      ]
+    }
+  }
+}

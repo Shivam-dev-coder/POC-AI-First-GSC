@@ -1,0 +1,40 @@
+/* Global styles — Tailwind base layers + small custom utilities. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* System font stack — no external font imports needed. */
+@layer base {
+  html {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+      Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+
+  /* Smooth scrolling for sidebar anchor links. */
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  /* Custom scrollbar for the live log and system prompt panels. */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #4b5563;
+    border-radius: 3px;
+  }
+
+  /* Collapsible JSON block — hide overflow when collapsed. */
+  .json-block {
+    font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+}

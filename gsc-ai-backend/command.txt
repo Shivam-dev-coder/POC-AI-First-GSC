@@ -1,0 +1,8 @@
+Terminal 1 — MCP Server
+  cd "c:\Users\shiva\Desktop\POC AI First GSC\gsc-ai-backend"; C:\Python314\python.exe -m mcp_server.server
+  
+Terminal 2 — AI Orchestrator
+  cd "c:\Users\shiva\Desktop\POC AI First GSC\gsc-ai-backend"; C:\Python314\python.exe -m uvicorn orchestrator.main:app --host 0.0.0.0 --port 8000 --reload
+
+Terminal 3 — Dashboard
+ cd "c:\Users\shiva\Desktop\POC AI First GSC\gsc-ai-backend\dashboard"; npm run dev

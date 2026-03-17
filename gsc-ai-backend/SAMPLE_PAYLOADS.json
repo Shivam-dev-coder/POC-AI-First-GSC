@@ -1,0 +1,395 @@
+{
+  "_meta": {
+    "generated_from": "FLOW_DOCUMENTATION.md",
+    "project": "GSC AI Delivery Backend",
+    "seed_drivers": [
+      {"id": 1, "name": "Marcus Webb", "experience_level": "senior", "is_new_driver": false},
+      {"id": 2, "name": "Priya Sharma", "experience_level": "mid", "is_new_driver": false},
+      {"id": 3, "name": "Jordan Lee", "experience_level": "junior", "is_new_driver": true}
+    ],
+    "seed_routes": [
+      {"id": 1, "name": "Jaipur North Route", "driver_id": 1},
+      {"id": 2, "name": "Jaipur Central Route", "driver_id": 2},
+      {"id": 3, "name": "Jaipur South Route", "driver_id": 3}
+    ],
+    "button_colours": {
+      "red": {"hex": "#DC2626", "meaning": "Missing required items, outside threshold, or any blocker"},
+      "amber": {"hex": "#F59E0B", "meaning": "Partially complete"},
+      "green": {"hex": "#16A34A", "meaning": "All required items done, driver ≤ 100 m, no blockers"}
+    },
+    "note": "This file contains sample payloads for every message exchanged between the AI backend and the Flutter mobile app, as well as dashboard interactions."
+  },
+  "flutter_to_backend": {
+    "driver_login_by_id": {
+      "_description": "Sent when a driver logs in using their ID.",
+      "envelope": {"intent_type": "driver_login", "payload": {"driver_id": 1}},
+      "flat_format": {"intent_type": "driver_login", "payload": {"driver_id": 1}}
+    },
+    "driver_login_by_name": {
+      "_description": "Sent when a driver logs in using their name.",
+      "envelope": {"intent_type": "driver_login", "payload": {"name": "Marcus Webb"}},
+      "flat_format": {"intent_type": "driver_login", "payload": {"name": "Marcus Webb"}}
+    },
+    "stop_selected": {
+      "_description": "Sent when a driver selects a stop from their route list.",
+      "envelope": {"intent_type": "stop_selected", "payload": {"stop_id": 16, "driver_id": 1}}
+    },
+    "map_loaded": {
+      "_description": "Sent when the map screen loads for a stop.",
+      "envelope": {"intent_type": "map_loaded", "payload": {"stop_id": 16, "driver_id": 1, "distance_m": 85.3, "lat": 26.9312, "lng": 75.7824}}
+    },
+    "route_map_opened": {
+      "_description": "Sent when the driver opens the route map screen.",
+      "envelope": {"intent_type": "route_map_opened", "payload": {"driver_id": 1, "route_id": 1, "driver_lat": 26.9312, "driver_lng": 75.7824}},
+      "flat_format": {"event": "route_map_opened", "driver_id": "1", "route_id": "1", "driver_lat": 26.9312, "driver_lng": 75.7824}
+    },
+    "stop_map_opened": {
+      "_description": "Sent when the driver opens the map for a specific stop.",
+      "envelope": {"intent_type": "stop_map_opened", "payload": {"driver_id": 1, "route_id": 1, "stop_id": 16, "driver_lat": 26.9312, "driver_lng": 75.7824}}
+    },
+    "product_screen_loaded_empty": {
+      "_description": "Sent when the product screen loads and no items have been scanned yet.",
+      "envelope": {"intent_type": "product_screen_loaded", "payload": {"stop_id": 16, "driver_id": 1, "scanned_items": []}}
+    },
+    "product_screen_loaded_partial": {
+      "_description": "Sent when the product screen loads and some items have been scanned.",
+      "envelope": {"intent_type": "product_screen_loaded", "payload": {"stop_id": 16, "driver_id": 1, "scanned_items": ["Marlboro Red 20s"]}}
+    },
+    "item_scanned_first": {
+      "_description": "Sent when the driver scans their first item.",
+      "envelope": {"intent_type": "item_scanned", "payload": {"stop_id": 16, "item_id": 2, "driver_id": 1, "scanned_items": ["Marlboro Red 20s"]}}
+    },
+    "item_scanned_all_complete": {
+      "_description": "Sent when the driver has scanned all required items.",
+      "envelope": {"intent_type": "item_scanned", "payload": {"stop_id": 16, "item_id": 2, "driver_id": 1, "scanned_items": ["Marlboro Red 20s", "Lambert & Butler King Size", "Amber Leaf 50g Pouch", "Soft Drinks Tote A", "Crisps Assorted Box x12", "Empty Crate Return", "Cash Collection", "Delivery Summary Sheet"]}}
+    },
+    "deliver_tapped_with_missing": {
+      "_description": "Sent when the driver taps Deliver with missing items.",
+      "envelope": {"intent_type": "deliver_tapped", "payload": {"stop_id": 16, "driver_id": 1, "scanned_items": ["Marlboro Red 20s", "Lambert & Butler King Size"]}}
+    },
+    "deliver_tapped_all_complete": {
+      "_description": "Sent when the driver taps Deliver with all items complete.",
+      "envelope": {"intent_type": "deliver_tapped", "payload": {"stop_id": 16, "driver_id": 1, "scanned_items": ["Marlboro Red 20s", "Lambert & Butler King Size", "Amber Leaf 50g Pouch", "Soft Drinks Tote A", "Crisps Assorted Box x12", "Empty Crate Return", "Cash Collection", "Delivery Summary Sheet"]}}
+    },
+    "count_screen_loaded": {
+      "_description": "Sent when the count screen loads for cig_tob items.",
+      "envelope": {"intent_type": "count_screen_loaded", "payload": {"stop_id": 16, "driver_id": 1}}
+    },
+    "user_idle_product_screen": {
+      "_description": "Sent when the driver is idle on the product screen.",
+      "envelope": {"intent_type": "user_idle", "payload": {"screen": "product_screen", "driver_id": 1, "idle_seconds": 45}}
+    },
+    "user_idle_map_screen": {
+      "_description": "Sent when the driver is idle on the map screen.",
+      "envelope": {"intent_type": "user_idle", "payload": {"screen": "map_screen", "driver_id": 1, "idle_seconds": 45}}
+    }
+  },
+  "backend_to_flutter": {
+    "login_success_experienced_driver": {
+      "_description": "Returned when an experienced driver logs in successfully with no overrides active.",
+      "payload": {
+        "intent_type": "driver_login",
+        "deliver_button": {"color": "#16A34A"},
+        "sections": [],
+        "popup": {"show": false, "blocking": false, "title": "", "message": "", "buttons": []},
+        "spotlight": {"show": false, "target": "", "text": ""},
+        "driver": {"id": 1, "name": "Marcus Webb", "experience_level": "senior", "is_new_driver": false},
+        "route": {
+          "route_id": 1,
+          "route_name": "Jaipur North Route",
+          "route_status": "pending",
+          "stops": [
+            {"id": 16, "stop_number": 16, "sequence": 1, "name": "Shastri Nagar Daily Mart", "address": "Shastri Nagar, Jaipur 302016", "lat": 26.9312, "lng": 75.7824, "status": "pending"},
+            {"id": 17, "stop_number": 17, "sequence": 2, "name": "Jhotwara Road Store", "address": "Jhotwara, Jaipur 302012", "lat": 26.9567, "lng": 75.7934, "status": "pending"},
+            {"id": 18, "stop_number": 18, "sequence": 3, "name": "Bani Park Supermarket", "address": "Bani Park, Jaipur 302016", "lat": 26.9285, "lng": 75.7997, "status": "pending"}
+          ]
+        }
+      }
+    },
+    "login_success_new_driver": {
+      "_description": "Returned when a new driver logs in successfully.",
+      "payload": {
+        "intent_type": "driver_login",
+        "deliver_button": {"color": "#16A34A"},
+        "sections": [],
+        "popup": {"show": false, "blocking": false, "title": "", "message": "", "buttons": []},
+        "spotlight": {"show": true, "target": "route_list", "text": "Welcome! Tap a stop on your route to begin your first delivery."},
+        "driver": {"id": 3, "name": "Jordan Lee", "experience_level": "junior", "is_new_driver": true},
+        "route": {
+          "route_id": 3,
+          "route_name": "Jaipur South Route",
+          "route_status": "pending",
+          "stops": [
+            {"id": 8, "stop_number": 8, "sequence": 1, "name": "Malviya Nagar Superstore", "address": "Malviya Nagar, Jaipur 302017", "lat": 26.8629, "lng": 75.8282, "status": "pending"},
+            {"id": 9, "stop_number": 9, "sequence": 2, "name": "Jagatpura Quick Stop", "address": "Jagatpura, Jaipur 302025", "lat": 26.84, "lng": 75.856, "status": "pending"}
+          ]
+        }
+      }
+    },
+    "login_failed_driver_not_found": {
+      "_description": "Returned when a driver login fails because the driver is not found.",
+      "payload": {
+        "intent_type": "driver_login",
+        "deliver_button": {"color": "#DC2626"},
+        "sections": [],
+        "popup": {"show": true, "blocking": true, "title": "Login Failed", "message": "Driver not found. Please check your ID or name.", "buttons": [{"label": "OK", "action": "dismiss", "visible": true}]},
+        "spotlight": {"show": false, "target": "", "text": ""},
+        "driver": null,
+        "route": null
+      }
+    },
+    "login_blocked_by_override": {
+      "_description": "Returned when an override blocks the driver from logging in.",
+      "payload": {
+        "intent_type": "driver_login",
+        "deliver_button": {"color": "#DC2626"},
+        "sections": [],
+        "popup": {"show": true, "blocking": true, "title": "Blocked", "message": "You are blocked from deliveries today due to an override rule.", "buttons": [{"label": "OK", "action": "dismiss", "visible": true}]},
+        "spotlight": {"show": false, "target": "", "text": ""},
+        "driver": {"id": 3, "name": "Jordan Lee", "experience_level": "junior", "is_new_driver": true},
+        "route": null
+      }
+    },
+    "route_map_full": {
+      "_description": "Returned when the driver opens the route map and sees all stops.",
+      "payload": {
+        "intent_type": "route_map_opened",
+        "deliver_button": {"color": "#16A34A"},
+        "sections": [],
+        "popup": {"show": false, "blocking": false, "title": "", "message": "", "buttons": []},
+        "spotlight": {"show": false, "target": "", "text": ""},
+        "map_mode": "full_route",
+        "stops_coordinates": [
+          {"sequence": 1, "stop_id": 16, "name": "Shastri Nagar Daily Mart", "lat": 26.9312, "lng": 75.7824, "status": "pending"},
+          {"sequence": 2, "stop_id": 17, "name": "Jhotwara Road Store", "lat": 26.9567, "lng": 75.7934, "status": "pending"},
+          {"sequence": 3, "stop_id": 18, "name": "Bani Park Supermarket", "lat": 26.9285, "lng": 75.7997, "status": "pending"},
+          {"sequence": 4, "stop_id": 19, "name": "Civil Lines Grocery", "lat": 26.9123, "lng": 75.7991, "status": "pending"},
+          {"sequence": 5, "stop_id": 20, "name": "MI Road Mini Mart", "lat": 26.9156, "lng": 75.8102, "status": "pending"},
+          {"sequence": 6, "stop_id": 21, "name": "Tonk Road Express", "lat": 26.8852, "lng": 75.8134, "status": "pending"},
+          {"sequence": 7, "stop_id": 22, "name": "Sanganer Market", "lat": 26.8142, "lng": 75.8149, "status": "pending"}
+        ],
+        "stat_cards": [
+          {"icon": "📍", "label": "Total Distance", "value": "18.4 km", "sublabel": ""},
+          {"icon": "⏱", "label": "Estimated Time", "value": "37 min", "sublabel": "at 30 km/h avg"},
+          {"icon": "⛽", "label": "Fuel Estimate", "value": "1.5 L", "sublabel": ""},
+          {"icon": "🏪", "label": "Stops Remaining", "value": "7", "sublabel": ""}
+        ],
+        "ai_message": "Your route looks clear. Start with Shastri Nagar Daily Mart and work north."
+      }
+    },
+    "stop_map_within_range": {
+      "_description": "Returned when the driver is within range of the stop.",
+      "payload": {
+        "intent_type": "stop_map_opened",
+        "deliver_button": {"color": "#16A34A"},
+        "sections": [],
+        "popup": {"show": false, "blocking": false, "title": "", "message": "", "buttons": []},
+        "spotlight": {"show": false, "target": "", "text": ""},
+        "map_mode": "single_stop",
+        "stop": {"id": 16, "name": "Shastri Nagar Daily Mart", "address": "Shastri Nagar, Jaipur 302016", "lat": 26.9312, "lng": 75.7824, "status": "pending"},
+        "next_stop": {"id": 16, "name": "Shastri Nagar Daily Mart", "address": "Shastri Nagar, Jaipur 302016", "lat": 26.9312, "lng": 75.7824, "status": "pending"},
+        "start_delivery_enabled": true,
+        "distance_to_stop_km": 0.045,
+        "stat_cards": [
+          {"icon": "📏", "label": "Distance to Stop", "value": "45 m", "sublabel": ""},
+          {"icon": "🚶", "label": "Arrival", "value": "< 1 min", "sublabel": ""},
+          {"icon": "🏪", "label": "Stop Number", "value": "Stop 1 of 7", "sublabel": ""},
+          {"icon": "🚬", "label": "Double Scan Required", "value": "cig_tob", "sublabel": "3 items"}
+        ],
+        "ai_message": "You're right at Shastri Nagar Daily Mart — tap Start Delivery when ready."
+      }
+    },
+    "stop_map_out_of_range": {
+      "_description": "Returned when the driver is out of range of the stop.",
+      "payload": {
+        "intent_type": "stop_map_opened",
+        "deliver_button": {"color": "#DC2626"},
+        "sections": [],
+        "popup": {"show": false, "blocking": false, "title": "", "message": "", "buttons": []},
+        "spotlight": {"show": false, "target": "", "text": ""},
+        "map_mode": "single_stop",
+        "stop": {"id": 16, "name": "Shastri Nagar Daily Mart", "address": "Shastri Nagar, Jaipur 302016", "lat": 26.9312, "lng": 75.7824, "status": "pending"},
+        "next_stop": {"id": 16, "name": "Shastri Nagar Daily Mart", "address": "Shastri Nagar, Jaipur 302016", "lat": 26.9312, "lng": 75.7824, "status": "pending"},
+        "start_delivery_enabled": false,
+        "distance_to_stop_km": 1.8,
+        "stat_cards": [
+          {"icon": "📏", "label": "Distance to Stop", "value": "1.8 km", "sublabel": ""},
+          {"icon": "🚶", "label": "Arrival", "value": "4 min", "sublabel": ""}
+        ],
+        "ai_message": "You are too far from the stop. Get closer to begin delivery."
+      }
+    },
+    "product_screen_initial_load": {
+      "_description": "Returned when the product screen loads and no items have been scanned yet.",
+      "payload": {
+        "intent_type": "product_screen_loaded",
+        "deliver_button": {"color": "#DC2626"},
+        "sections": [
+          {"title": "Overview", "icon": "📋", "items": [{"id": "1", "name": "Delivery Summary Sheet", "isRequired": true, "interactionType": "photo", "scanCount": 1, "photoMandatory": true}]},
+          {"title": "Cigarettes & Tobacco", "icon": "🚬", "items": [{"id": "2", "name": "Marlboro Red 20s", "isRequired": true, "interactionType": "scan", "scanCount": 1, "photoMandatory": false}, {"id": "3", "name": "Lambert & Butler King Size", "isRequired": true, "interactionType": "scan", "scanCount": 1, "photoMandatory": false}, {"id": "4", "name": "Amber Leaf 50g Pouch", "isRequired": true, "interactionType": "scan", "scanCount": 1, "photoMandatory": false}]},
+          {"title": "Totes", "icon": "🛒", "items": [{"id": "5", "name": "Soft Drinks Tote A", "isRequired": true, "interactionType": "scan", "scanCount": 1, "photoMandatory": false}]},
+          {"title": "Boxes", "icon": "📦", "items": [{"id": "6", "name": "Crisps Assorted Box x12", "isRequired": true, "interactionType": "scan", "scanCount": 1, "photoMandatory": false}]},
+          {"title": "Returns", "icon": "🔄", "items": [{"id": "7", "name": "Empty Crate Return", "isRequired": true, "interactionType": "scan", "scanCount": 1, "photoMandatory": false}]},
+          {"title": "Collection", "icon": "💰", "items": [{"id": "8", "name": "Cash Collection", "isRequired": true, "interactionType": "count", "scanCount": 1, "photoMandatory": false}]}
+        ],
+        "popup": {"show": false, "blocking": false, "title": "", "message": "", "buttons": []},
+        "spotlight": {"show": true, "target": "first_item", "text": "Scan or photograph each item to begin your delivery checklist."}
+      }
+    },
+    "product_screen_partial_scan": {
+      "_description": "Returned when some items have been scanned on the product screen.",
+      "payload": {
+        "intent_type": "product_screen_loaded",
+        "deliver_button": {"color": "#F59E0B"},
+        "sections": [
+          {"title": "Overview", "icon": "📋", "items": [{"id": "1", "name": "Delivery Summary Sheet", "isRequired": true, "interactionType": "photo", "scanCount": 1, "photoMandatory": true}]},
+          {"title": "Cigarettes & Tobacco", "icon": "🚬", "items": [{"id": "2", "name": "Marlboro Red 20s", "isRequired": true, "interactionType": "scan", "scanCount": 1, "photoMandatory": false}, {"id": "3", "name": "Lambert & Butler King Size", "isRequired": true, "interactionType": "scan", "scanCount": 1, "photoMandatory": false}, {"id": "4", "name": "Amber Leaf 50g Pouch", "isRequired": true, "interactionType": "scan", "scanCount": 1, "photoMandatory": false}]},
+          {"title": "Totes", "icon": "🛒", "items": [{"id": "5", "name": "Soft Drinks Tote A", "isRequired": true, "interactionType": "scan", "scanCount": 1, "photoMandatory": false}]},
+          {"title": "Boxes", "icon": "📦", "items": [{"id": "6", "name": "Crisps Assorted Box x12", "isRequired": true, "interactionType": "scan", "scanCount": 1, "photoMandatory": false}]},
+          {"title": "Returns", "icon": "🔄", "items": [{"id": "7", "name": "Empty Crate Return", "isRequired": true, "interactionType": "scan", "scanCount": 1, "photoMandatory": false}]},
+          {"title": "Collection", "icon": "💰", "items": [{"id": "8", "name": "Cash Collection", "isRequired": true, "interactionType": "count", "scanCount": 1, "photoMandatory": false}]}
+        ],
+        "popup": {"show": false, "blocking": false, "title": "", "message": "", "buttons": []},
+        "spotlight": {"show": false, "target": "", "text": ""}
+      }
+    },
+    "item_scanned_update": {
+      "_description": "Returned when an item is scanned and sections are not repopulated.",
+      "payload": {
+        "intent_type": "item_scanned",
+        "deliver_button": {"color": "#F59E0B"},
+        "sections": [],
+        "popup": {"show": false, "blocking": false, "title": "", "message": "", "buttons": []},
+        "spotlight": {"show": false, "target": "", "text": ""}
+      }
+    },
+    "deliver_blocked_missing_items": {
+      "_description": "Returned when the driver taps Deliver with missing items.",
+      "payload": {
+        "intent_type": "deliver_tapped",
+        "deliver_button": {"color": "#DC2626"},
+        "sections": [],
+        "popup": {"show": true, "blocking": true, "title": "Missing Items", "message": "You must complete: Soft Drinks Tote A, Crisps Assorted Box x12, Empty Crate Return, Cash Collection, Delivery Summary Sheet.", "buttons": [{"label": "Go to Checklist", "action": "open_product_screen", "visible": true}]},
+        "spotlight": {"show": false, "target": "", "text": ""}
+      }
+    },
+    "deliver_success_all_complete": {
+      "_description": "Returned when the driver taps Deliver with all items complete.",
+      "payload": {
+        "intent_type": "deliver_tapped",
+        "deliver_button": {"color": "#16A34A"},
+        "sections": [],
+        "popup": {"show": false, "blocking": false, "title": "", "message": "", "buttons": []},
+        "spotlight": {"show": false, "target": "", "text": ""}
+      }
+    },
+    "count_screen_cig_tob_guidance": {
+      "_description": "Returned when the count screen loads for cig_tob items and guidance is shown.",
+      "payload": {
+        "intent_type": "count_screen_loaded",
+        "deliver_button": {"color": "#DC2626"},
+        "sections": [],
+        "popup": {"show": false, "blocking": false, "title": "", "message": "", "buttons": []},
+        "spotlight": {"show": true, "target": "cig_tob_first_item", "text": "Scan each cigarette and tobacco product to confirm your delivery count."}
+      }
+    },
+    "user_idle_spotlight_product": {
+      "_description": "Returned when the driver is idle on the product screen and spotlight is shown.",
+      "payload": {
+        "intent_type": "user_idle",
+        "deliver_button": {"color": "#DC2626"},
+        "sections": [],
+        "popup": {"show": false, "blocking": false, "title": "", "message": "", "buttons": []},
+        "spotlight": {"show": true, "target": "next_unscanned_item", "text": "Scan the next item on your checklist to keep your delivery on track."}
+      }
+    },
+    "user_idle_spotlight_map": {
+      "_description": "Returned when the driver is idle on the map screen and spotlight is shown.",
+      "payload": {
+        "intent_type": "user_idle",
+        "deliver_button": {"color": "#DC2626"},
+        "sections": [],
+        "popup": {"show": false, "blocking": false, "title": "", "message": "", "buttons": []},
+        "spotlight": {"show": true, "target": "start_delivery_button", "text": "Tap start delivery when you are ready."}
+      }
+    },
+    "server_push_informational": {
+      "_description": "Returned when the server pushes an informational popup to all drivers.",
+      "payload": {
+        "type": "server_push",
+        "popup": {"show": true, "blocking": false, "title": "Traffic Alert", "message": "Heavy traffic reported on Tonk Road. Plan alternative routes where possible.", "buttons": [{"label": "OK", "action": "acknowledge", "visible": true}]}
+      }
+    },
+    "server_push_urgent_blocking": {
+      "_description": "Returned when the server pushes an urgent blocking popup.",
+      "payload": {
+        "type": "server_push",
+        "popup": {"show": true, "blocking": true, "title": "Route Change", "message": "Your route has changed. Please review the new stops.", "buttons": [{"label": "Override", "action": "override", "visible": true}, {"label": "Cancel", "action": "cancel", "visible": true}]}
+      }
+    },
+    "server_push_specific_driver": {
+      "_description": "Returned when the server pushes a popup to a specific driver.",
+      "payload": {
+        "type": "server_push",
+        "popup": {"show": true, "blocking": false, "title": "Message for Marcus Webb", "message": "Please check your vehicle before starting your route.", "buttons": [{"label": "OK", "action": "acknowledge", "visible": true}]}
+      }
+    },
+    "server_push_with_three_buttons": {
+      "_description": "Returned when the server pushes a safety check popup with three buttons.",
+      "payload": {
+        "type": "server_push",
+        "popup": {"show": true, "blocking": true, "title": "Safety Check", "message": "Please complete the safety checklist before starting your route.", "buttons": [{"label": "Override", "action": "override", "visible": true}, {"label": "OK", "action": "acknowledge", "visible": true}, {"label": "Cancel", "action": "cancel", "visible": true}]}
+      }
+    },
+    "map_popup_location_override": {
+      "_description": "Returned when the driver is too far from the stop and a location override popup is shown.",
+      "payload": {
+        "intent_type": "stop_map_opened",
+        "deliver_button": {"color": "#DC2626"},
+        "sections": [],
+        "popup": {"show": true, "blocking": false, "title": "Location Override", "message": "You are 450m from the stop. Override or cancel.", "buttons": [{"label": "Override", "action": "override_location", "visible": true}, {"label": "Cancel", "action": "cancel", "visible": true}]},
+        "spotlight": {"show": false, "target": "", "text": ""}
+      }
+    }
+  },
+  "dashboard_to_backend": {
+    "command_send_popup_all_drivers": {
+      "_description": "Sent from dashboard to backend to push a popup to all drivers.",
+      "payload": {"command": "Heavy traffic on Tonk Road, warn all drivers"}
+    },
+    "command_send_popup_specific_driver": {
+      "_description": "Sent from dashboard to backend to push a popup to driver 1 only.",
+      "payload": {"command": "Marcus Webb, please check your vehicle before starting your route"}
+    },
+    "command_add_override_rule": {
+      "_description": "Sent from dashboard to backend to add an override rule.",
+      "payload": {"command": "Do not allow Jordan Lee to start deliveries today"}
+    },
+    "command_direct_override": {
+      "_description": "Sent from dashboard to backend to inject a direct override rule.",
+      "payload": {"rule": "Warn drivers about heavy traffic on Tonk Road before confirming delivery on that route"}
+    }
+  },
+  "backend_to_dashboard": {
+    "override_applied_response": {
+      "_description": "Returned by backend when an override rule is applied.",
+      "payload": {"type": "override", "rule": "Warn drivers about heavy traffic on Tonk Road before confirming delivery on that route"}
+    },
+    "popup_sent_to_all_response": {
+      "_description": "Returned by backend when a popup is sent to all drivers.",
+      "payload": {"type": "popup", "status": "sent", "target": "all", "reached": [1, 2, 3], "not_connected": []}
+    },
+    "popup_sent_partial_response": {
+      "_description": "Returned by backend when a popup is sent but some drivers are offline.",
+      "payload": {"type": "popup", "status": "sent", "target": "specific", "reached": [1], "not_connected": [2, 3]}
+    },
+    "overrides_list_response": {
+      "_description": "Returned by backend when listing active overrides.",
+      "payload": {"active_overrides": ["Do not allow Jordan Lee to start deliveries today", "Warn all drivers: the Sindhi Camp area requires a police escort — contact dispatch before delivery"]}
+    },
+    "online_drivers_response": {
+      "_description": "Returned by backend when listing online drivers.",
+      "payload": {"online_drivers": [{"id": 1, "name": "Marcus Webb"}, {"id": 3, "name": "Jordan Lee"}]}
+    }
+  }
+}
