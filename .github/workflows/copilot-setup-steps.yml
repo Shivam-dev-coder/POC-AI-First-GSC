@@ -24,6 +24,7 @@ jobs:
         node-version: lts/*
 
     - name: Install dependencies
+      working-directory: gsc-ai-backend/dashboard
       run: npm ci
 
     - name: Install Playwright Browsers
@@ -31,4 +32,5 @@ jobs:
 
     # Customize this step as needed
     - name: Build application
-      run: npx run build
+      working-directory: gsc-ai-backend/dashboard
+      run: npm run build
